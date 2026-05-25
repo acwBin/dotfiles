@@ -84,3 +84,6 @@ if vim.g.neovide then
     vim.g.neovide_scale_factor = 1.0
   end, { desc = "Zoom reset" })
 end
+
+-- Toggle
+Snacks.toggle.option("autochdir", { name = "Autochdir" }):map("<leader>u/")

@@ -37,6 +37,9 @@ opt.shell = "bash"
 -- Modeline
 opt.modeline = false
 
+-- Auto change dir
+opt.autochdir = false
+
 -- Transparency
 vim.g.transparency = true
 
