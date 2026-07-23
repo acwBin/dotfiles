@@ -37,7 +37,20 @@ return {
                 keys = {
                   -- ["o"] = "explorer_open", -- open with system application
                   ["o"] = "confirm",
-                  ["O"] = { { "pick_win", "jump" }, mode = { "i", "n" } },
+                  ["O"] = {
+                    "O",
+                    function()
+                      local picker = Snacks.picker.get({ source = "explorer" })[1]
+                      local item = picker and picker:current()
+                      if not item or not item.file then
+                        return
+                      end
+                      local path = item.file:gsub("/", "\\")
+                      local arg = item.dir and path or "/select," .. path
+                      vim.fn.jobstart({ "cmd.exe", "/c", "start", "", "explorer.exe", arg }, { detach = true })
+                    end,
+                    desc = "open_explorer",
+                  },
                   ["-"] = { "edit_split", mode = { "i", "n" } },
                   ["|"] = { "edit_vsplit", mode = { "i", "n" } },
                 },
