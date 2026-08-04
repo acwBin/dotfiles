@@ -75,9 +75,25 @@
 			"#ifdef __cplusplus",
 			"}",
 			"#endif",
+            "",
 			"#endif /* ${TM_FILENAME_BASE/(.*)/${1:/upcase}/}_H_ */",
 			"",
 		],
 		"description": "Include guard and extern \"C\""
+	},
+	"Include guard for head only implement": {
+		"scope": "c,cpp",
+		"prefix": [
+            "#impl",
+			"#igimpl",
+		],
+		"body": [
+            "#if defined(${TM_FILENAME_BASE/(.*)/${1:/upcase}/}_IMPL) && !defined(${TM_FILENAME_BASE/(.*)/${1:/upcase}/}_IMPL_DONE)",
+            "#define ${TM_FILENAME_BASE/(.*)/${1:/upcase}/}_IMPL_DONE",
+            "$1",
+            "#endif /* defined(${TM_FILENAME_BASE/(.*)/${1:/upcase}/}_IMPL) && !defined(${TM_FILENAME_BASE/(.*)/${1:/upcase}/}_IMPL_DONE) */",
+            "",
+		],
+		"description": "Include guard for head only implement"
 	},
 }
