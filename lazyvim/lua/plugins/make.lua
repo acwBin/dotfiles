@@ -20,11 +20,11 @@ M.opts = {
       end,
     },
     keil = {
-      glob = "**/*.uvproj[xw]",
+      glob = "**/*.{uvproj,uvproj[xw]}",
       cmd = function(target)
         return target and ('keil -b -t"%s"'):format(target) or "keil -b"
       end,
-      efm = "%f(%l):\\ %t%*[^:]:\\ \\ %#%*[^:]:\\ %m",
+      efm = "%f(%l):\\ %t%*[^:]:\\ \\ %m,%f(%l):\\ %t%*[A-Za-z]\\ %m",
       parse_targets = function(content)
         local targets = {}
         for name in content:gmatch("<TargetName>([^<]+)</TargetName>") do
@@ -72,8 +72,20 @@ local function pick_file(glob)
   return pick_one(vim.fn.glob(glob, false, true), "Select: " .. glob)
 end
 
+local function strip_bash_noise(s)
+  local kept = {}
+  for _, line in ipairs(vim.split(s or "", "\n")) do
+    if not (line:find("cannot set terminal process group") or line:find("no job control in this shell")) then
+      kept[#kept + 1] = line
+    end
+  end
+  return table.concat(kept, "\n")
+end
+
 local function exec_cmd(cmd)
-  return await_system({ "bash", "-ic", cmd })
+  local results = await_system({ "bash", "-ic", cmd })
+  results.stderr = strip_bash_noise(results.stderr)
+  return results
 end
 
 local function parse(output, efm, resolve_dir)
